@@ -1,20 +1,98 @@
-<div align="center">
-<img width="1200" height="475" alt="GHBanner" src="https://github.com/user-attachments/assets/0aa67016-6eaf-458a-adb2-6e31a0763ed6" />
-</div>
+# Mwananchi Budget Concierge 🇰🇪
 
-# Run and deploy your AI Studio app
+**Empowering Kenyan citizens with real-time, AI-driven transparency into local county budgets.**
 
-This contains everything you need to run your app locally.
+## 🌟 The Problem
+Most Kenyans know their taxes go to the government, but very few know exactly how that money is spent in their own backyard. Official budget documents are typically 200+ page PDFs filled with technical jargon, hidden in obscure government portals. This information gap leads to a lack of accountability and low civic engagement.
 
-View your app in AI Studio: https://ai.studio/apps/deb5c97c-69a8-4fc7-b8b3-4d47d50643cd
+**Mwananchi Budget Concierge** solves this by turning complex budget data into a simple, conversational assistant. Residents can select their county and ward to see exactly what projects are funded—from road repairs to health clinics—and ask follow-up questions in natural language.
 
-## Run Locally
+---
 
-**Prerequisites:**  Node.js
+## 🤖 Agent Architecture
 
+The application uses a **Full-Stack Agentic Workflow** powered by Google Gemini and Firebase.
 
-1. Install dependencies:
-   `npm install`
-2. Set the `GEMINI_API_KEY` in [.env.local](.env.local) to your Gemini API key
-3. Run the app:
-   `npm run dev`
+### 1. The Concierge Agent (Resident-Facing)
+*   **Role**: A friendly, Swahili/Sheng-speaking assistant that grounds its knowledge in specific budget data.
+*   **Tools**: 
+    *   **Context Grounding**: Dynamically pulls budget summaries for the selected county/ward from Firestore.
+    *   **Translation/Simplification**: Converts technical financial terms (e.g., "Non-performing assets") into simple concepts for the user.
+
+### 2. The Discovery Agent (Admin-Facing)
+*   **Role**: Automates the ingestion of public budget data.
+*   **Tools**:
+    *   **Web Discovery**: Uses Gemini to search for and identify official budget PDF URLs across 47 county websites.
+    *   **Structure Extraction**: Analyzes discovered URLs to extract total allocations, project lists, and administrative ward names.
+    *   **Auto-Seeding**: Writes parsed data directly to Firestore, keeping the system up-to-date without manual data entry.
+
+### 3. Communication Bridge
+*   **SMS Broadcast Tool**: Integrates with the **Africa's Talking API** to send real-time alerts to residents when new budget amendments are passed in their specific ward.
+
+---
+
+## 🚀 How to Run Locally
+
+### Prerequisites
+*   Node.js (v18+)
+*   Firebase Project (Firestore & Auth enabled)
+*   Gemini API Key (Google AI Studio)
+
+### Setup
+1.  **Clone the Repository**
+    ```bash
+    git clone https://github.com/your-username/mwananchi-budget-concierge.git
+    cd mwananchi-budget-concierge
+    ```
+
+2.  **Install Dependencies**
+    ```bash
+    npm install
+    ```
+
+3.  **Environment Variables**
+    Create a `.env` file in the root:
+    ```env
+    GEMINI_API_KEY=your_gemini_key_here
+    AFRICAS_TALKING_USERNAME=sandbox
+    AFRICAS_TALKING_API_KEY=your_at_key_here
+    ```
+
+4.  **Firebase Config**
+    Download your `firebase-applet-config.json` from the Firebase console and place it in the root directory.
+
+5.  **Start Development Server**
+    ```bash
+    npm run dev
+    ```
+    Access the app at `http://localhost:3000`
+
+---
+
+## 🌐 Interacting with the Deployed Version
+
+1.  **Select Your Location**: Use the dropdowns to pick your **County** (e.g., Nairobi, Kiambu) and **Ward** (e.g., Roysambu).
+2.  **Explore the Dashboard**: View the instant breakdown of Development vs. Recurrent spending.
+3.  **Chat with the Concierge**: Ask questions like:
+    *   "How much is allocated for health in my ward?"
+    *   "What are the top 3 projects being funded this year?"
+    *   "Explain what 'Recurrent Budget' means in simple terms."
+4.  **Admin Mode**: (Restricted access) Experience the AI-powered search by entering a county name and clicking "AI Auto-Discover".
+
+---
+
+## 📸 Screenshots & Demo
+*   **Demo Video**: [Link to your video]
+*   **Live App**: [Link to deployed URL]
+
+---
+
+## 👥 Meet the Team
+*   **Team Lead**: [Your Name] - Backend & AI Integration
+*   **Product Designer**: [Name] - UI/UX & Swahili Localization
+*   **Systems Architect**: [Name] - Firebase & Infrastructure
+
+---
+
+## 📜 License
+This project is licensed under the MIT License.
