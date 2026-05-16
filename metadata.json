@@ -1,0 +1,6 @@
+{
+  "name": "Mwananchi Budget Concierge",
+  "description": "A civic transparency platform turning Nairobi County Budget Estimates into plain-language answers for residents with real-time SMS digests.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}

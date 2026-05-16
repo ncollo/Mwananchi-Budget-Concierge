@@ -1,0 +1,77 @@
+rules_version = '2';
+
+service cloud.firestore {
+  match /databases/{database}/documents {
+    
+    // Default deny
+    match /{document=**} {
+      allow read, write: if false;
+    }
+
+    // Helper functions
+    function isSignedIn() {
+      return request.auth != null;
+    }
+
+    function isEmailVerified() {
+      return request.auth.token.email_verified == true;
+    }
+
+    function isAdmin() {
+      // In a real app, you'd check a custom claim or a special 'admins' collection
+      // For this app, we'll allow the user njugunacollins16@gmail.com to be admin if verified
+      return isSignedIn() && isEmailVerified() && request.auth.token.email == 'njugunacollins16@gmail.com';
+    }
+
+    function isValidId(id) {
+      return id is string && id.size() <= 128 && id.matches('^[a-zA-Z0-9_\\-]+$');
+    }
+
+    // Counties Collection
+    match /counties/{countyId} {
+      allow read: if true;
+      allow write: if isAdmin();
+    }
+
+    // Wards Collection
+    match /wards/{wardId} {
+      allow read: if true; // Public transparency
+      allow write: if isAdmin();
+      
+      function isValidWard(data) {
+        return data.name is string && data.name.size() > 0 && data.name.size() <= 100
+          && data.totalBudget is number
+          && data.countyId is string;
+      }
+
+      allow create: if isAdmin() && isValidWard(request.resource.data);
+      allow update: if isAdmin() && isValidWard(request.resource.data);
+    }
+
+    // Subscribers Collection
+    match /subscribers/{subscriberId} {
+      // Residents can sign up
+      allow create: if true 
+        && request.resource.data.phone is string 
+        && request.resource.data.phone.size() >= 10
+        && request.resource.data.wardId is string;
+      
+      // Only Admin can see the full list of subscribers
+      allow read: if isAdmin();
+      allow delete: if isAdmin();
+    }
+
+    // Amendments Collection
+    match /amendments/{amendmentId} {
+      allow read: if true; // Public transparency
+      allow write: if isAdmin();
+
+      function isValidAmendment(data) {
+        return data.title is string && data.title.size() > 0
+          && data.wardId is string;
+      }
+
+      allow create: if isAdmin() && isValidAmendment(request.resource.data);
+    }
+  }
+}

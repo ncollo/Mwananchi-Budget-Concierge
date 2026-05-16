@@ -1,0 +1,77 @@
+{
+  "entities": {
+    "County": {
+      "title": "County Profile",
+      "description": "General budget data for a specific Kenyan county",
+      "type": "object",
+      "properties": {
+        "name": { "type": "string" },
+        "budgetUrl": { "type": "string" },
+        "totalBudget": { "type": "number" },
+        "summary": { "type": "string" },
+        "updatedAt": { "type": "string", "format": "date-time" }
+      },
+      "required": ["name", "budgetUrl"]
+    },
+    "Ward": {
+      "title": "Ward Profile",
+      "description": "Details about a specific ward within a county",
+      "type": "object",
+      "properties": {
+        "name": { "type": "string" },
+        "countyId": { "type": "string" },
+        "totalBudget": { "type": "number" },
+        "developmentBudget": { "type": "number" },
+        "recurrentBudget": { "type": "number" },
+        "projects": { "type": "array", "items": { "type": "string" } },
+        "updatedAt": { "type": "string", "format": "date-time" }
+      },
+      "required": ["name", "countyId", "totalBudget"]
+    },
+    "Subscriber": {
+      "title": "Subscriber",
+      "description": "Resident mobile numbers subscribed to ward updates",
+      "type": "object",
+      "properties": {
+        "phone": { "type": "string" },
+        "wardId": { "type": "string" },
+        "countyId": { "type": "string" },
+        "createdAt": { "type": "string", "format": "date-time" }
+      },
+      "required": ["phone", "wardId", "countyId"]
+    },
+    "Amendment": {
+      "title": "Amendment",
+      "description": "Budget variations from gazette notices",
+      "type": "object",
+      "properties": {
+        "title": { "type": "string" },
+        "description": { "type": "string" },
+        "originalValue": { "type": "number" },
+        "newValue": { "type": "number" },
+        "wardId": { "type": "string" },
+        "countyId": { "type": "string" },
+        "date": { "type": "string", "format": "date-time" }
+      },
+      "required": ["title", "wardId"]
+    }
+  },
+  "firestore": {
+    "counties": {
+      "schema": "County",
+      "description": "Top-level county budget records"
+    },
+    "wards": {
+      "schema": "Ward",
+      "description": "Collection of ward budget information"
+    },
+    "subscribers": {
+      "schema": "Subscriber",
+      "description": "Collection of opted-in residents"
+    },
+    "amendments": {
+      "schema": "Amendment",
+      "description": "Collection of budget amendments"
+    }
+  }
+}
