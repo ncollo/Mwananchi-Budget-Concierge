@@ -82,15 +82,21 @@ The application uses a **Full-Stack Agentic Workflow** powered by Google Gemini 
 ---
 
 ## 📸 Screenshots & Demo
-*   **Demo Video**: [Link to your video]
-*   **Live App**: [Link to deployed URL]
+*   
+*   <img width="1366" height="768" alt="Screenshot (622)" src="https://github.com/user-attachments/assets/68379df9-380c-4b2e-b301-b7bea2f904b9" />
+<img width="1366" height="768" alt="Screenshot (621)" src="https://github.com/user-attachments/assets/eb269567-e954-41be-aa4d-d2ee7b43dc24" />
+<img width="1366" height="768" alt="Screenshot (620)" src="https://github.com/user-attachments/assets/6172626c-7271-4786-98ca-2bca26e13e15" />
+
 
 ---
 
 ## 👥 Meet the Team
-*   **Team Lead**: [Your Name] - Backend & AI Integration
-*   **Product Designer**: [Name] - UI/UX & Swahili Localization
-*   **Systems Architect**: [Name] - Firebase & Infrastructure
+*   **Collins Njuguna**: - Front-end Design
+*   **Lewis Mwangi**: - front end and firebase structure
+*   **Victor Mwangi**: - Backend and AI
+*   **Franklin Muchiri**: - Data Analyst
+*   **Allan Bill Otiende**: - Webhook Engine
+*   **Asahel Kigen**: - Core Data Architecture
 
 ---
 
