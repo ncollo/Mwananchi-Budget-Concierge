@@ -51,11 +51,12 @@ The application uses a **Full-Stack Agentic Workflow** powered by Google Gemini 
     ```
 
 3.  **Environment Variables**
-    Create a `.env` file in the root:
+    Copy `.env.example` to `.env` and fill in your values:
     ```env
     GEMINI_API_KEY=your_gemini_key_here
     AT_USERNAME=sandbox
     AT_API_KEY=your_at_key_here
+    PORT=3000
     ```
 
 4.  **Firebase Config**
@@ -65,7 +66,7 @@ The application uses a **Full-Stack Agentic Workflow** powered by Google Gemini 
     ```bash
     npm run dev
     ```
-    Access the app at `http://localhost:3000`
+    Access the app at `http://localhost:8080` (or `http://localhost:3000` if you set `PORT=3000`)
 
 ---
 
