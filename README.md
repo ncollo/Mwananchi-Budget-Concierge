@@ -54,8 +54,8 @@ The application uses a **Full-Stack Agentic Workflow** powered by Google Gemini 
     Create a `.env` file in the root:
     ```env
     GEMINI_API_KEY=your_gemini_key_here
-    AFRICAS_TALKING_USERNAME=sandbox
-    AFRICAS_TALKING_API_KEY=your_at_key_here
+    AT_USERNAME=sandbox
+    AT_API_KEY=your_at_key_here
     ```
 
 4.  **Firebase Config**
@@ -66,6 +66,38 @@ The application uses a **Full-Stack Agentic Workflow** powered by Google Gemini 
     npm run dev
     ```
     Access the app at `http://localhost:3000`
+
+---
+
+## ☁️ Deploy to Google Cloud Run (gcloud)
+
+### Prerequisites
+*   A Google Cloud project with billing enabled
+*   gcloud CLI installed and authenticated
+*   Gemini API key and any third-party API keys you need
+
+### Deploy from source
+1.  **Authenticate and set project**
+    ```bash
+    gcloud auth login
+    gcloud config set project YOUR_PROJECT_ID
+    ```
+
+2.  **Enable required services**
+    ```bash
+    gcloud services enable run.googleapis.com cloudbuild.googleapis.com artifactregistry.googleapis.com
+    ```
+
+3.  **Deploy**
+    ```bash
+    gcloud run deploy mwananchi-budget-concierge \
+      --source . \
+      --region us-central1 \
+      --allow-unauthenticated \
+      --set-env-vars GEMINI_API_KEY=YOUR_GEMINI_API_KEY,AT_USERNAME=YOUR_AT_USERNAME,AT_API_KEY=YOUR_AT_API_KEY
+    ```
+
+Cloud Run injects `PORT` automatically (defaults to 8080). The app listens on `0.0.0.0` so the service is reachable.
 
 ---
 
