@@ -102,6 +102,38 @@ Cloud Run injects `PORT` automatically (defaults to 8080). The app listens on `0
 
 ---
 
+## ⚙️ Build and Deploy Settings
+
+### gcloud config (recommended)
+```bash
+gcloud config set project YOUR_PROJECT_ID
+gcloud config set run/region us-central1
+```
+
+### Container build (optional)
+If you prefer container builds instead of `--source`, you can build and deploy an image.
+
+```bash
+gcloud artifacts repositories create containers \
+    --repository-format=docker \
+    --location=us-central1
+
+gcloud builds submit --tag us-central1-docker.pkg.dev/YOUR_PROJECT_ID/containers/mwananchi-budget-concierge
+
+gcloud run deploy mwananchi-budget-concierge \
+    --image us-central1-docker.pkg.dev/YOUR_PROJECT_ID/containers/mwananchi-budget-concierge \
+    --allow-unauthenticated \
+    --set-env-vars GEMINI_API_KEY=YOUR_GEMINI_API_KEY,AT_USERNAME=YOUR_AT_USERNAME,AT_API_KEY=YOUR_AT_API_KEY
+```
+
+### Billing cap guidance
+Set a billing budget and alerts in the Google Cloud Console before deploy:
+*   Create a Budget for your billing account
+*   Add alerts at 50%, 80%, and 100%
+*   Review Cloud Run, Cloud Build, and Artifact Registry usage after each deploy
+
+---
+
 ## 🌐 Interacting with the Deployed Version
 
 1.  **Select Your Location**: Use the dropdowns to pick your **County** (e.g., Nairobi, Kiambu) and **Ward** (e.g., Roysambu).
