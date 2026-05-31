@@ -9,7 +9,7 @@ dotenv.config();
 
 const app = express();
 app.use(express.json());
-const PORT = 3000;
+const PORT = Number(process.env.PORT) || 8080;
 
 // Africa's Talking Setup
 const at = AfricasTalking({
@@ -61,9 +61,9 @@ let countyContexts: Record<string, string> = {
 app.post("/api/chat", async (req, res) => {
   try {
     const { message, ward, county } = req.body;
-    
+
     const context = countyContexts[county?.toLowerCase()] || budgetContext;
-    
+
     const prompt = `
       You are the Mwananchi Budget Concierge. 
       Context: ${context}
@@ -81,7 +81,7 @@ app.post("/api/chat", async (req, res) => {
     `;
 
     const response = await ai.models.generateContent({
-      model: "gemini-3-flash-preview", 
+      model: "gemini-3-flash-preview",
       contents: prompt,
     });
 
@@ -95,11 +95,11 @@ app.post("/api/chat", async (req, res) => {
 app.post("/api/admin/auto-discover", async (req, res) => {
   try {
     const { countyName } = req.body;
-    
+
     // Step 1: Use Gemini to "find" the probable official URL for this county's budget
     // In a real production app, we might use a Google Search API, but here we can
     // leverage Gemini's knowledge or internal tools (simulated for the demo)
-    
+
     const searchPrompt = `
       Find the official 2024/2025 County Budget Estimates PDF URL for ${countyName} County, Kenya.
       If you can't find a direct PDF link, provide the official county assembly or executive budget portal link.
@@ -157,8 +157,8 @@ app.post("/api/admin/auto-discover", async (req, res) => {
 
     countyContexts[countyName.toLowerCase()] = extracted.analysis || ingestRes.text || "";
 
-    res.json({ 
-      success: true, 
+    res.json({
+      success: true,
       url: parsed.url,
       summary: parsed.summary,
       analysis: extracted.analysis || ingestRes.text,
@@ -173,11 +173,11 @@ app.post("/api/admin/auto-discover", async (req, res) => {
 app.post("/api/admin/ingest", async (req, res) => {
   try {
     const { countyName, url } = req.body;
-    
+
     // In a real app with File API, we'd fetch the PDF and upload to Gemini
     // For this demo, we use Gemini to "simulate" reading the URL's content structure
     // based on typical Kenyan county budget formats if we can't fetch it directly
-    
+
     const processPrompt = `
       Analyze the typical budget structure for a Kenyan county named ${countyName}.
       Assume the user is providing a link: ${url}
@@ -197,8 +197,8 @@ app.post("/api/admin/ingest", async (req, res) => {
     const newContext = response.text || "";
     countyContexts[countyName.toLowerCase()] = newContext;
 
-    res.json({ 
-      success: true, 
+    res.json({
+      success: true,
       context: newContext,
       message: `Ingested budget for ${countyName}`
     });
@@ -211,7 +211,7 @@ app.post("/api/admin/ingest", async (req, res) => {
 app.post("/api/broadcast", async (req, res) => {
   try {
     const { ward, subscribers } = req.body;
-    
+
     // Generate 155-char Swahili/Sheng summary
     const summaryPrompt = `
       Create a 155-character summary in Swahili/Sheng about the budget for ${ward}.
@@ -256,7 +256,7 @@ app.post("/api/broadcast", async (req, res) => {
 app.post("/api/webhooks/gazette", async (req, res) => {
   try {
     const { payload, title } = req.body;
-    
+
     const checkPatchPrompt = `
       Observe this new budget patch/gazette notice:
       "${payload}"
@@ -275,10 +275,10 @@ app.post("/api/webhooks/gazette", async (req, res) => {
     // Update in-memory context (In production, you'd save this to Firestore 'amendments')
     budgetContext += `\n\n[Amendment: ${title}]\n${payload}`;
 
-    res.json({ 
-      success: true, 
+    res.json({
+      success: true,
       amendments: response.text,
-      updatedContext: true 
+      updatedContext: true
     });
   } catch (error) {
     console.error("Webhook Error:", error);
