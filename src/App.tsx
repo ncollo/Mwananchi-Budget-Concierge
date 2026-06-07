@@ -4,14 +4,14 @@
  */
 
 import { useState, useEffect, useRef } from 'react';
-import { 
-  Search, 
-  MessageSquare, 
-  Send, 
-  BarChart3, 
-  Users, 
-  Bell, 
-  MapPin, 
+import {
+  Search,
+  MessageSquare,
+  Send,
+  BarChart3,
+  Users,
+  Bell,
+  MapPin,
   ShieldCheck,
   ChevronRight,
   Info,
@@ -138,10 +138,10 @@ export default function App() {
 
   const handleSubscribe = async () => {
     if (!phone || !selectedWard) return;
-    
+
     // Quick cleanup for local state and Firestore
     const cleanPhone = phone.trim();
-    
+
     try {
       await addDoc(collection(db, 'subscribers'), {
         phone: cleanPhone,
@@ -164,21 +164,21 @@ export default function App() {
           <h1 className="text-xl font-serif italic text-[#d4d4c8] leading-tight">Mwananchi<br /><span className="text-white font-bold not-italic">Budget Concierge</span></h1>
           <p className="text-[10px] uppercase tracking-widest mt-2 text-[#5A5A40] font-bold">Civic Transparency Portal</p>
         </div>
-        
+
         <nav className="flex-1 space-y-2">
-          <button 
+          <button
             onClick={() => setActiveTab('resident')}
             className={`w-full flex items-center space-x-3 p-3 rounded-lg transition-all ${activeTab === 'resident' ? 'bg-[#5A5A40]' : 'text-gray-400 hover:bg-white/5'}`}
           >
             <div className={`w-2 h-2 rounded-full ${activeTab === 'resident' ? 'bg-white animate-pulse' : 'bg-gray-600'}`}></div>
             <span className="text-sm font-medium">Resident Portal</span>
           </button>
-          
-          <button 
+
+          <button
             onClick={() => setActiveTab('admin')}
             className={`w-full flex items-center space-x-3 p-3 rounded-lg transition-all ${activeTab === 'admin' ? 'bg-[#5A5A40] text-white' : 'text-gray-400 hover:bg-white/5'}`}
           >
-             <div className={`w-2 h-2 rounded-full ${activeTab === 'admin' ? 'bg-white animate-pulse' : 'bg-gray-600'}`}></div>
+            <div className={`w-2 h-2 rounded-full ${activeTab === 'admin' ? 'bg-white animate-pulse' : 'bg-gray-600'}`}></div>
             <span className="text-sm font-medium">Admin Dashboard</span>
           </button>
         </nav>
@@ -211,74 +211,71 @@ export default function App() {
           <div className="max-w-4xl mx-auto space-y-8 pb-12">
             {activeTab === 'resident' ? (
               <>
-            {/* Header / Selectors */}
-            <header className="flex flex-col md:flex-row justify-between items-start md:items-center gap-6">
-              <div className="flex flex-col md:flex-row gap-4 flex-1 w-full">
-                <div className="space-y-1 flex-1">
-                  <label className="block text-[10px] uppercase tracking-wider font-bold text-[#5A5A40]">County</label>
-                  <div className="relative">
-                    <select 
-                      className="w-full appearance-none bg-white border border-gray-200 rounded-lg px-4 py-2 pr-10 text-sm font-semibold shadow-sm focus:outline-none focus:ring-2 focus:ring-[#5A5A40] transition-all"
-                      value={selectedCounty?.id || ''}
-                      onChange={(e) => setSelectedCounty(counties.find(c => c.id === e.target.value) || null)}
-                    >
-                      {counties.length === 0 && <option>No Counties</option>}
-                      {counties.map(c => (
-                        <option key={c.id} value={c.id}>{c.name} County</option>
-                      ))}
-                    </select>
-                    <div className="absolute right-3 top-1/2 -translate-y-1/2 pointer-events-none">
-                      <ChevronRight className="w-4 h-4 text-gray-400 rotate-90" />
+                {/* Header / Selectors */}
+                <header className="flex flex-col md:flex-row justify-between items-start md:items-center gap-6">
+                  <div className="flex flex-col md:flex-row gap-4 flex-1 w-full">
+                    <div className="space-y-1 flex-1">
+                      <label className="block text-[10px] uppercase tracking-wider font-bold text-[#5A5A40]">County</label>
+                      <div className="relative">
+                        <select
+                          className="w-full appearance-none bg-white border border-gray-200 rounded-lg px-4 py-2 pr-10 text-sm font-semibold shadow-sm focus:outline-none focus:ring-2 focus:ring-[#5A5A40] transition-all"
+                          value={selectedCounty?.id || ''}
+                          onChange={(e) => setSelectedCounty(counties.find(c => c.id === e.target.value) || null)}
+                        >
+                          {counties.length === 0 && <option>No Counties</option>}
+                          {counties.map(c => (
+                            <option key={c.id} value={c.id}>{c.name} County</option>
+                          ))}
+                        </select>
+                        <div className="absolute right-3 top-1/2 -translate-y-1/2 pointer-events-none">
+                          <ChevronRight className="w-4 h-4 text-gray-400 rotate-90" />
+                        </div>
+                      </div>
                     </div>
-                  </div>
-                </div>
 
-                <div className="space-y-1 flex-1">
-                  <label className="block text-[10px] uppercase tracking-wider font-bold text-[#5A5A40]">Ward</label>
-                  <div className="relative">
-                    <select 
-                      disabled={!selectedCounty}
-                      className="w-full appearance-none bg-white border border-gray-200 rounded-lg px-4 py-2 pr-10 text-sm font-semibold shadow-sm focus:outline-none disabled:opacity-50"
-                      value={selectedWard?.id || ''}
-                      onChange={(e) => setSelectedWard(wards.find(w => w.id === e.target.value) || null)}
-                    >
-                      {wards.length === 0 && selectedCounty && <option disabled>No wards found for this county</option>}
-                      {wards.map(w => (
-                        <option key={w.id} value={w.id}>{w.name} Ward</option>
-                      ))}
-                    </select>
-                    {wards.length === 0 && selectedCounty && (
-                      <p className="text-[9px] text-[#5A5A40] mt-1 font-bold italic animate-pulse">Request AI ingestion in Admin tab</p>
-                    )}
-                    <div className="absolute right-3 top-1/2 -translate-y-1/2 pointer-events-none">
-                      <ChevronRight className="w-4 h-4 text-gray-400 rotate-90" />
+                    <div className="space-y-1 flex-1">
+                      <label className="block text-[10px] uppercase tracking-wider font-bold text-[#5A5A40]">Ward</label>
+                      <div className="relative">
+                        <select
+                          disabled={!selectedCounty}
+                          className="w-full appearance-none bg-white border border-gray-200 rounded-lg px-4 py-2 pr-10 text-sm font-semibold shadow-sm focus:outline-none disabled:opacity-50"
+                          value={selectedWard?.id || ''}
+                          onChange={(e) => setSelectedWard(wards.find(w => w.id === e.target.value) || null)}
+                        >
+                          {wards.length === 0 && selectedCounty && <option disabled>No wards found for this county</option>}
+                          {wards.map(w => (
+                            <option key={w.id} value={w.id}>{w.name} Ward</option>
+                          ))}
+                        </select>
+                        <div className="absolute right-3 top-1/2 -translate-y-1/2 pointer-events-none">
+                          <ChevronRight className="w-4 h-4 text-gray-400 rotate-90" />
+                        </div>
+                      </div>
                     </div>
                   </div>
-                </div>
-              </div>
-              <div className="flex items-center space-x-4 bg-white p-2 rounded-full shadow-sm border border-gray-100 shrink-0">
-                <div className="bg-green-100 text-green-700 text-[10px] font-bold px-3 py-1 rounded-full uppercase">Real-time: Online</div>
-                <div className="w-8 h-8 rounded-full bg-[#5A5A40] flex items-center justify-center text-white text-[10px] font-bold">
-                  {auth.currentUser?.email?.substring(0, 2).toUpperCase() || 'NA'}
-                </div>
-              </div>
-            </header>
+                  <div className="flex items-center space-x-4 bg-white p-2 rounded-full shadow-sm border border-gray-100 shrink-0">
+                    <div className="bg-green-100 text-green-700 text-[10px] font-bold px-3 py-1 rounded-full uppercase">Real-time: Online</div>
+                    <div className="w-8 h-8 rounded-full bg-[#5A5A40] flex items-center justify-center text-white text-[10px] font-bold">
+                      {auth.currentUser?.email?.substring(0, 2).toUpperCase() || 'NA'}
+                    </div>
+                  </div>
+                </header>
 
                 {/* Dashboard Stats */}
                 {selectedWard ? (
                   <section className="grid grid-cols-1 md:grid-cols-3 gap-4">
-                    <StatCard 
-                      label="Development Allocation" 
+                    <StatCard
+                      label="Development Allocation"
                       value={`KES ${(selectedWard.developmentBudget / 1000000).toFixed(1)}M`}
                       description="Funds for long-term assets like roads, water pipes, and clinics."
                     />
-                    <StatCard 
-                      label="Recurrent Costs" 
+                    <StatCard
+                      label="Recurrent Costs"
                       value={`KES ${(selectedWard.recurrentBudget / 1000000).toFixed(1)}M`}
                       description="Daily operations: salaries, and maintenance of existing facilities."
                     />
-                    <StatCard 
-                      label="Active Amendments" 
+                    <StatCard
+                      label="Active Amendments"
                       value="04"
                       description="Changes detected from Supplementary Gazette Notices via auto-scraper."
                       primary
@@ -299,20 +296,19 @@ export default function App() {
                     </div>
                     <span className="text-[10px] text-gray-400 font-mono italic md:block hidden">Grounded: Page 1-400 • Gazette 42A</span>
                   </div>
-                  
+
                   <div className="flex-1 p-6 space-y-4 overflow-y-auto bg-white" style={{ backgroundImage: "url('https://www.transparenttextures.com/patterns/pinstriped-suit.png')" }}>
                     {messages.map((msg, i) => (
-                      <motion.div 
+                      <motion.div
                         initial={{ opacity: 0, y: 10 }}
                         animate={{ opacity: 1, y: 0 }}
-                        key={i} 
+                        key={i}
                         className={`flex flex-col ${msg.role === 'user' ? 'items-end' : 'items-start'}`}
                       >
-                        <div className={`max-w-[85%] px-5 py-3 rounded-2xl shadow-sm border ${
-                          msg.role === 'user' 
-                            ? 'bg-[#141414] text-white rounded-tr-none border-transparent' 
+                        <div className={`max-w-[85%] px-5 py-3 rounded-2xl shadow-sm border ${msg.role === 'user'
+                            ? 'bg-[#141414] text-white rounded-tr-none border-transparent'
                             : 'bg-gray-100 text-gray-800 rounded-tl-none border-gray-200'
-                        }`}>
+                          }`}>
                           <p className="text-sm leading-relaxed">{msg.content}</p>
                           {msg.role === 'assistant' && i > 0 && (
                             <div className="mt-3 pt-3 border-t border-gray-200 flex flex-wrap gap-4">
@@ -336,15 +332,15 @@ export default function App() {
                   </div>
 
                   <div className="p-4 border-t border-gray-200 flex space-x-3 bg-white">
-                    <input 
-                      type="text" 
+                    <input
+                      type="text"
                       placeholder="Ask about health clinics, school bursaries, or road repairs..."
                       className="flex-1 bg-gray-50 border border-gray-200 rounded-full px-6 py-3 text-sm focus:outline-none focus:ring-2 focus:ring-[#5A5A40] transition-all"
                       value={userInput}
                       onChange={(e) => setUserInput(e.target.value)}
                       onKeyPress={(e) => e.key === 'Enter' && handleSendMessage()}
                     />
-                    <button 
+                    <button
                       onClick={handleSendMessage}
                       className="bg-[#5A5A40] text-white px-6 py-3 rounded-full font-bold text-sm shadow-md hover:bg-[#4a4a35] transition-colors"
                     >
@@ -360,19 +356,19 @@ export default function App() {
                     <div className="relative z-10 space-y-6">
                       <div className="space-y-1">
                         <h3 className="text-2xl font-bold flex items-center gap-2">
-                           <Smartphone className="text-[#5A5A40]" /> SMS Budget Alerts
+                          <Smartphone className="text-[#5A5A40]" /> SMS Budget Alerts
                         </h3>
                         <p className="text-gray-400 text-sm">Stay ahead with real-time summaries for {selectedWard?.name || 'your ward'}.</p>
                       </div>
                       <div className="flex flex-col md:flex-row gap-3">
-                        <input 
-                          type="tel" 
+                        <input
+                          type="tel"
                           placeholder="07... Mobile Number"
                           className="flex-1 bg-white/5 border border-white/10 rounded-xl px-5 py-4 focus:outline-none focus:border-[#5A5A40] text-white"
                           value={phone}
                           onChange={(e) => setPhone(e.target.value)}
                         />
-                        <button 
+                        <button
                           onClick={handleSubscribe}
                           className="bg-[#5A5A40] text-white font-bold px-8 py-4 rounded-xl hover:bg-[#6b6b4d] transition-all"
                         >
@@ -382,7 +378,7 @@ export default function App() {
                     </div>
                   </section>
                 ) : (
-                  <motion.section 
+                  <motion.section
                     initial={{ opacity: 0, scale: 0.95 }}
                     animate={{ opacity: 1, scale: 1 }}
                     className="bg-[#5A5A40] rounded-3xl p-8 text-white flex items-center justify-between"
@@ -416,15 +412,15 @@ export default function App() {
             <span className="text-[10px] font-mono text-gray-400 truncate">Monitoring for new supplementary notices...</span>
           </div>
           <div className="flex items-center space-x-6 md:flex hidden">
-             <div className="flex flex-col items-end">
-                <span className="text-[9px] text-gray-400 uppercase font-bold leading-none">Security Level</span>
-                <span className="text-[10px] font-bold text-[#5A5A40]">ENCRYPTED SSL</span>
-             </div>
-             <div className="h-8 w-px bg-gray-100" />
-             <div className="flex flex-col items-end">
-                <span className="text-[9px] text-gray-400 uppercase font-bold leading-none">System Status</span>
-                <span className="text-[10px] font-bold text-green-600">NOMINAL</span>
-             </div>
+            <div className="flex flex-col items-end">
+              <span className="text-[9px] text-gray-400 uppercase font-bold leading-none">Security Level</span>
+              <span className="text-[10px] font-bold text-[#5A5A40]">ENCRYPTED SSL</span>
+            </div>
+            <div className="h-8 w-px bg-gray-100" />
+            <div className="flex flex-col items-end">
+              <span className="text-[9px] text-gray-400 uppercase font-bold leading-none">System Status</span>
+              <span className="text-[10px] font-bold text-green-600">NOMINAL</span>
+            </div>
           </div>
         </footer>
       </main>
@@ -437,7 +433,7 @@ function AdminPortal() {
   const [subscribers, setSubscribers] = useState<any[]>([]);
   const [broadcastLog, setBroadcastLog] = useState<string[]>([]);
   const [isBroadcasting, setIsBroadcasting] = useState<string | null>(null);
-  
+
   // Ingestion state
   const [ingestCounty, setIngestCounty] = useState('');
   const [ingestUrl, setIngestUrl] = useState('');
@@ -469,7 +465,7 @@ function AdminPortal() {
         body: JSON.stringify({ countyName: ingestCounty }),
       });
       const data = await res.json();
-      
+
       // Save discovered county
       const countyRef = await addDoc(collection(db, 'counties'), {
         name: ingestCounty,
@@ -516,7 +512,7 @@ function AdminPortal() {
         body: JSON.stringify({ countyName: ingestCounty, url: ingestUrl }),
       });
       const data = await res.json();
-      
+
       // Save county to Firestore so it shows up in selectors
       await addDoc(collection(db, 'counties'), {
         name: ingestCounty,
@@ -539,7 +535,7 @@ function AdminPortal() {
   const handleBroadcast = async (wardName: string) => {
     setIsBroadcasting(wardName);
     const wardSubs = subscribers.filter(s => s.wardName === wardName).map(s => s.phone);
-    
+
     if (wardSubs.length === 0) {
       alert("No subscribers in this ward yet.");
       setIsBroadcasting(null);
@@ -571,7 +567,7 @@ function AdminPortal() {
           <h2 className="text-2xl font-bold font-serif italic text-[#141414]">Administrative Vault</h2>
           <p className="text-gray-500 text-xs px-8 leading-relaxed max-w-sm mx-auto">Access restricted to authorized budget monitors. Verify your identity to manage broadcasts and supplementary data ingestion.</p>
         </div>
-        <button 
+        <button
           onClick={signInWithGoogle}
           className="bg-[#141414] text-white px-10 py-4 rounded-xl font-bold flex items-center gap-3 hover:bg-black transition-all shadow-lg"
         >
@@ -587,7 +583,7 @@ function AdminPortal() {
         <div className="flex items-center justify-between">
           <h2 className="text-2xl font-bold text-[#141414]">Broadcast Dashboard</h2>
           <div className="flex items-center gap-2 bg-[#5A5A40]/10 text-[#5A5A40] px-3 py-1 rounded-full text-[10px] font-bold uppercase tracking-wider">
-             Live SMS Queue
+            Live SMS Queue
           </div>
         </div>
 
@@ -602,12 +598,11 @@ function AdminPortal() {
                     <Users size={12} className="text-[#5A5A40]" /> {count} Recipients Ready
                   </div>
                 </div>
-                <button 
+                <button
                   disabled={isBroadcasting === ward}
                   onClick={() => handleBroadcast(ward)}
-                  className={`px-6 py-3 rounded-xl text-[11px] uppercase tracking-widest font-black transition-all ${
-                    isBroadcasting === ward ? 'bg-gray-100 text-gray-300' : 'bg-[#141414] text-white hover:bg-black shadow-md'
-                  }`}
+                  className={`px-6 py-3 rounded-xl text-[11px] uppercase tracking-widest font-black transition-all ${isBroadcasting === ward ? 'bg-gray-100 text-gray-300' : 'bg-[#141414] text-white hover:bg-black shadow-md'
+                    }`}
                 >
                   {isBroadcasting === ward ? 'Processing...' : 'Broadcast summary'}
                 </button>
@@ -637,47 +632,47 @@ function AdminPortal() {
             <Info size={16} /> Data Ingestion (PDF from Web)
           </h3>
           <div className="bg-white rounded-2xl p-8 border border-gray-100 space-y-6 shadow-sm">
-             <div className="space-y-4">
-                <div className="space-y-4">
-                  <div className="flex flex-col gap-1">
-                    <label className="text-[10px] font-bold text-gray-500 uppercase">County Name</label>
-                    <input 
-                      type="text" 
-                      placeholder="e.g. Kiambu, Mombasa..." 
-                      className="bg-[#f5f5f0] p-3 rounded-lg border border-gray-200 text-sm focus:outline-none focus:border-[#5A5A40]"
-                      value={ingestCounty}
-                      onChange={(e) => setIngestCounty(e.target.value)}
-                    />
-                  </div>
-                  <div className="flex flex-col gap-1">
-                    <label className="text-[10px] font-bold text-gray-500 uppercase">PDF Web URL</label>
-                    <input 
-                      type="url" 
-                      placeholder="https://county.go.ke/budget.pdf" 
-                      className="bg-[#f5f5f0] p-3 rounded-lg border border-gray-200 text-sm focus:outline-none focus:border-[#5A5A40]"
-                      value={ingestUrl}
-                      onChange={(e) => setIngestUrl(e.target.value)}
-                    />
-                  </div>
+            <div className="space-y-4">
+              <div className="space-y-4">
+                <div className="flex flex-col gap-1">
+                  <label className="text-[10px] font-bold text-gray-500 uppercase">County Name</label>
+                  <input
+                    type="text"
+                    placeholder="e.g. Kiambu, Mombasa..."
+                    className="bg-[#f5f5f0] p-3 rounded-lg border border-gray-200 text-sm focus:outline-none focus:border-[#5A5A40]"
+                    value={ingestCounty}
+                    onChange={(e) => setIngestCounty(e.target.value)}
+                  />
                 </div>
+                <div className="flex flex-col gap-1">
+                  <label className="text-[10px] font-bold text-gray-500 uppercase">PDF Web URL</label>
+                  <input
+                    type="url"
+                    placeholder="https://county.go.ke/budget.pdf"
+                    className="bg-[#f5f5f0] p-3 rounded-lg border border-gray-200 text-sm focus:outline-none focus:border-[#5A5A40]"
+                    value={ingestUrl}
+                    onChange={(e) => setIngestUrl(e.target.value)}
+                  />
+                </div>
+              </div>
 
-                <div className="pt-4 border-t border-gray-100 grid grid-cols-1 gap-3">
-                  <button 
-                    onClick={handleIngest}
-                    disabled={isIngesting || isDiscovering || !ingestCounty || !ingestUrl}
-                    className="w-full bg-[#141414] text-white text-[10px] uppercase font-bold py-4 rounded-lg hover:bg-black transition-all disabled:opacity-50"
-                  >
-                    {isIngesting ? 'Analyzing PDF Content...' : 'Manual URL Ingest'}
-                  </button>
-                  <button 
-                    onClick={handleAutoDiscover}
-                    disabled={isIngesting || isDiscovering || !ingestCounty}
-                    className="w-full bg-[#5A5A40] text-white text-[10px] uppercase font-bold py-4 rounded-lg hover:bg-[#6b6b4d] transition-all disabled:opacity-50 flex items-center justify-center gap-2"
-                  >
-                    {isDiscovering ? 'AI Searching Web...' : <><Search size={14} /> AI Auto-Discover Budget</>}
-                  </button>
-                </div>
-             </div>
+              <div className="pt-4 border-t border-gray-100 grid grid-cols-1 gap-3">
+                <button
+                  onClick={handleIngest}
+                  disabled={isIngesting || isDiscovering || !ingestCounty || !ingestUrl}
+                  className="w-full bg-[#141414] text-white text-[10px] uppercase font-bold py-4 rounded-lg hover:bg-black transition-all disabled:opacity-50"
+                >
+                  {isIngesting ? 'Analyzing PDF Content...' : 'Manual URL Ingest'}
+                </button>
+                <button
+                  onClick={handleAutoDiscover}
+                  disabled={isIngesting || isDiscovering || !ingestCounty}
+                  className="w-full bg-[#5A5A40] text-white text-[10px] uppercase font-bold py-4 rounded-lg hover:bg-[#6b6b4d] transition-all disabled:opacity-50 flex items-center justify-center gap-2"
+                >
+                  {isDiscovering ? 'AI Searching Web...' : <><Search size={14} /> AI Auto-Discover Budget</>}
+                </button>
+              </div>
+            </div>
           </div>
         </section>
       </div>
